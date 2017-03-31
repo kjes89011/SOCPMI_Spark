@@ -131,7 +131,8 @@ def SOCPMI(word):
 					break
 				if word1NeighborKey[q] in word2Neighbor and word2Neighbor[word1NeighborKey[q]] > 0:
 					sum1 += word2Neighbor[word1NeighborKey[q]]**gama
-		sum1 = sum1/beta1
+		if sum1!=0:
+			sum1 = sum1/beta1
 
 	if beta2 != 0 and len(word2Neighbor) > 0:
 		if len(word2Neighbor) < beta2 :
@@ -151,7 +152,8 @@ def SOCPMI(word):
 					break
 				if word2NeighborKey[q] in word1Neighbor and word1Neighbor[word2NeighborKey[q]] > 0:
 					sum2 += word1Neighbor[word2NeighborKey[q]]**gama
-		sum2 = sum2/beta2
+		if sum2!=0:
+			sum2 = sum2/beta2
 
 	similarity = sum1 + sum2;
 
