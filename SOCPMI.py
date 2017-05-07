@@ -9,7 +9,7 @@ delta = 2.0		#corpus越大，delta要越大，12個例句用0.7，我先暫時�
 gama = 3
 
 def window(origin):
-	origin = origin.split("\t")[0].split(" ")
+	origin = origin.split(" ")
 	output = []
 	for Hitword in origin:
 		index = origin.index(Hitword)	
@@ -164,7 +164,7 @@ def SOCPMI(word):
 text_file = sc.textFile("./SOCPMIInput/CleanCorpus.txt")
 
 #WordCount
-WordCounts = text_file.flatMap(lambda line: line.split("\t")[0].split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a + b)
+WordCounts = text_file.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a + b)
 
 #文章共有幾個不同的詞
 NumberOfWords = len(WordCounts.collect())
@@ -197,14 +197,14 @@ socpmi = socpmiPreProcess.cartesian(socpmiPreProcess).map(SOCPMI)
 
 socpmi.saveAsTextFile("Word_SOCPMI_Similarity")
 
-# f = open("./SOCPMIOutput/test.txt","w")
+# f = open("./SOCPMIOutput/Word_SOCPMI_Similarity.txt","w")
 # for x in socpmi.collect():
 # 	if x[2] > 0:
 # 		f.write(u'\t'.join(unicode(s) for s in x).encode("utf-8").strip() + '\n')
 # f.close()
 
-#輸出Debug用
-# for x in socpmi.take(10):
+# 輸出Debug用
+# for x in socpmi.take(20):
 # 	print x
 
 sc.stop()
