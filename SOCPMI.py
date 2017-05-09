@@ -1,6 +1,8 @@
 #-*- coding: utf-8 -*-
 from pyspark import SparkContext, SparkConf
-import math
+import math,time
+
+start_time = time.time()
 
 conf = SparkConf().setAppName("SOCPMI")
 sc = SparkContext(conf = conf)
@@ -193,18 +195,22 @@ pmi = NeighborCandidate.map(PreProcessingPMI_part1).flatMap(lambda line:line).un
 
 socpmiPreProcess = pmi.union(WordsBeta).reduceByKey(lambda a,b:a+b).map(SOCPMI_preprocess)
 
-socpmi = socpmiPreProcess.cartesian(socpmiPreProcess).map(SOCPMI)
+socpmi = socpmiPreProcess.cartesian(socpmiPreProcess).map(SOCPMI).filter(lambda word: word[2] != 0)
+
+#map from tuple to String and charset to Utf8
+socpmi = socpmi.map(lambda word:u'\t'.join(unicode(s) for s in word).encode("utf-8").strip())
 
 socpmi.saveAsTextFile("Word_SOCPMI_Similarity")
 
-# f = open("./SOCPMIOutput/Word_SOCPMI_Similarity.txt","w")
-# for x in socpmi.collect():
-# 	if x[2] > 0:
-# 		f.write(u'\t'.join(unicode(s) for s in x).encode("utf-8").strip() + '\n')
-# f.close()
+#f = open("./SOCPMIOutput/Word_SOCPMI_Similarity.txt","w")
+#for x in socpmi.collect(): 
+#	f.write(x + '\n')
+#f.close()
 
-# 輸出Debug用
-# for x in socpmi.take(20):
+#輸出Debug用
+# for x in socpmi.take(10):
 # 	print x
 
 sc.stop()
+
+print("--- %s minutes ---" % ((time.time() - start_time)/60))
