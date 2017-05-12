@@ -200,16 +200,19 @@ socpmi = socpmiPreProcess.cartesian(socpmiPreProcess).map(SOCPMI).filter(lambda 
 #map from tuple to String and charset to Utf8
 socpmi = socpmi.map(lambda word:u'\t'.join(unicode(s) for s in word).encode("utf-8").strip())
 
+
 socpmi.saveAsTextFile("Word_SOCPMI_Similarity")
 
 #輸出Debug用
 # for x in socpmi.take(10):
 # 	print x
 
+
 #f = open("./Word_SOCPMI_Similarity.txt","w")
 #for x in socpmi.collect(): 
 #	f.write(x + '\n')
 #f.close()
+
 
 sc.stop()
 
